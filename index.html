@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        li {
+            list-style: none;
+        }
+        a {
+            color: black;
+            text-decoration: none;
+        }
+        .w {
+            width: 900px;
+            margin: 200px auto;
+        }
+      #box {
+        position: relative;
+          height: 30px;
+         background-color: blanchedalmond;
+      }
+       #box ul {
+         
+           display: flex;
+           justify-content:space-evenly;
+           align-items: center;
+       }
+     #box ul li a{
+         display: block;
+         height: 100%;
+         padding:0 30px;
+         line-height: 30px;
+         background-color: wheat;
+     }
+     #boxBar {
+         display: none;
+         position: absolute;
+         left: 35px;
+         top: 0;
+         height: 30px;
+         width: 108px;
+        background-color: red;
+         opacity: .8;
+     }
+   
+      
+    </style>
+    <script>
+        window.document.addEventListener('DOMContentLoaded', function (e) {  
+               var box=document.getElementById('box'); //父盒子
+               var boxBar = document.getElementById('boxBar');
+               var lis=box.children[0].children;
+               var index=0;
+               var selectNum=0;
+           
+              function clearlisChild() {
+                for (var i = 0; i < lis.length; i++) {
+                    lis[i].children[0].setAttribute('index', i);
+                    lis[i].children[0].style.backgroundColor='wheat';
+                    lis[i].children[0].style.color='black';
+                }
+            }
+          
+            clearlisChild();
+              //默认选中
+            lis[0].children[0].style.backgroundColor = 'red';
+            lis[0].children[0].style.color = 'green';
+               //经过
+               box.children[0].addEventListener('mouseover',function(e){
+                   if(this!=e.target) {
+                      if(index!= e.target.getAttribute('index')){
+                           clearlisChild();
+                          index = e.target.getAttribute('index');
+                          boxBar.style.display = 'block';
+                         
+                         if(index!=selectNum) e.target.style.color = 'white';
+                          lis[selectNum].children[0].style.color = 'green';
+                       move(boxBar, Number(index) * 108+36* (Number(index)+1),10,function(){
+                             e.target.style.backgroundColor = 'red';
+                               boxBar.style.display='none';
+                       });
+                    }
+                   }
+               })
+          //点击
+           box.children[0].addEventListener('click', function (e) {
+               if (this != e.target) {
+                   clearlisChild();
+                 e.target.style.color = 'green'; 
+                 e.target.style.backgroundColor='red';
+                 selectNum=e.target.getAttribute('index');
+               }
+           });
+            box.addEventListener('mouseleave', function (e) {
+                if(index!=selectNum){
+                clearlisChild();
+                index= selectNum;
+                boxBar.style.display = 'block';
+                move(boxBar, Number(index) * 108 + 36 * (Number(index) + 1), 10, function () {
+                    lis[index].children[0].style.backgroundColor = 'red';
+                    boxBar.style.display = '';
+                });
+            
+                 
+                }
+            });
+         //动画
+         function move(obj,target,time,callback){
+             clearInterval(obj.timer);
+             obj.timer=setInterval(function(e){
+               obj.step= (target - obj.offsetLeft) / 10 ;
+               if(target===obj.offsetLeft){
+                   clearInterval(obj.timer);
+                   callback && callback();
+               }else {
+                   obj.style.left=obj.offsetLeft + (obj.step>=0 ? Math.ceil(obj.step) : Math.floor(obj.step)) + 'px';
+               }
+             },time)
+         }
+        })
+    </script>
+</head>
+<body>
+    <div id="box" class="w">
+        <ul>
+            <li><a href="javaScript:void(0);">导航栏</a></li>
+            <li><a href="javaScript:void(0);">导航栏</a></li>
+            <li><a href="javaScript:void(0);">导航栏</a></li>
+            <li><a href="javaScript:void(0);">导航栏</a></li>
+            <li><a href="javaScript:void(0);">导航栏</a></li>
+            <li><a href="javaScript:void(0);">导航栏</a></li>
+        </ul>
+        <div id="boxBar"></div>
+    </div>
+</body>
+</html>
